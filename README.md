@@ -1,0 +1,1 @@
+MH Helper is a web app written with C# & Blazor, with a Firebase database. This application is created to help new players of the game Monster Hunter World to become more familiar with the enemies they will be facing and the best type of weapon to defeat them.
