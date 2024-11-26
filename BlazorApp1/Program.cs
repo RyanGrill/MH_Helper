@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+//Register the Firebase Database
+builder.Services.AddScoped<FirebaseService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
