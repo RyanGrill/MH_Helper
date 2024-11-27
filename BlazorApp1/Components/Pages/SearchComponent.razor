@@ -1,7 +1,43 @@
-﻿@page "/"
+﻿@page "/search"
+@inject IJSRuntime JSRuntime
 
-<PageTitle>Home</PageTitle>
+<h3>Search Monsters</h3>
 
-<h1>MH Helper</h1>
+<div>
+    <input type="text" @bind="searchTerm" placeholder="Search by name..." />
+    <button @onclick="SearchMonsters">Search</button>
+</div>
+
+@if (monsters != null && monsters.Any())
+{
+    <ul>
+        @foreach (var monster in monsters)
+        {
+            <li>@monster.name</li>
+        }
+    </ul>
+}
+else if (searchTerm != null && searchTerm.Length > 0)
+{
+    <p>No users found for "@searchTerm"</p>
+}
+
+@code {
+    private string searchTerm = string.Empty;
+    private List<Monster> monsters;
+
+    private async Task SearchMonsters()
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            monsters = await JSRuntime.InvokeAsync<List<Monster>>("firebaseInterop.searchMonsters", searchTerm);
+        }
+    }
+
+    public class Monster
+    {
+        public string name { get; set; }
+    }
+}
 
 

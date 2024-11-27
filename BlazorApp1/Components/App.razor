@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
+    <base href="/search" />
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="BlazorApp1.styles.css" />
@@ -15,6 +15,38 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-zVvlbSZ6knzVLJE9ayYk7uhfL2GKSB0",
+            authDomain: "mh-world-weakness-finder.firebaseapp.com",
+            projectId: "mh-world-weakness-finder",
+            storageBucket: "mh-world-weakness-finder.firebasestorage.app",
+            messagingSenderId: "634819895213",
+            appId: "1:634819895213:web:9e0955921913873782cb24"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+
+        window.firebaseInterop = {
+            searchMonsters: function (searchTerm) {
+                return db.collection("Monsters")
+                    .where("Name", ">=", searchTerm)
+                    .where("Name", "<=", searchTerm + '\uf8ff') // For prefix search
+                    .get()
+                    .then(querySnapshot => {
+                        const names = [];
+                        querySnapshot.forEach(doc => {
+                            names.push({ id: doc.id, ...doc.data() });
+                        });
+                        return names;
+                    })
+                    .catch(error => console.error("Error getting documents: ", error));
+            }
+        };
+    </script>
 </body>
 
 </html>
